@@ -1,0 +1,323 @@
+/* PAGE */
+.page {
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* NAV */
+.nav {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  color: #000;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLink {
+  font-size: 0.875rem;
+  color: #a1a1aa;
+  text-decoration: none;
+}
+.navLink:hover {
+  color: #fff;
+}
+
+/* HERO */
+.hero {
+  flex: 1;
+  text-align: center;
+  padding: 4rem 1rem 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  margin-bottom: 2rem;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.gradientText {
+  background: linear-gradient(
+    to right,
+    #ffffff,
+    #94a3b8
+  ); /* White to Slate-400 */
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  max-width: 36rem;
+  color: #a1a1aa;
+  font-size: 1.125rem;
+  margin-bottom: 2.5rem;
+}
+
+/* FORM */
+.form {
+  max-width: 28rem;
+  width: 100%;
+  position: relative;
+}
+
+.formGlow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 1rem;
+  opacity: 0.2;
+  filter: blur(20px);
+}
+
+.formInner {
+  position: relative;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  display: flex;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--ring);
+  border-radius: 5px;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* 2. REMOVE NUMBER ARROWS (SPINNERS) */
+/* Chrome, Safari, Edge, Opera */
+.input[type="number"]::-webkit-outer-spin-button,
+.input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.button {
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.helperText {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #52525b;
+}
+
+/* FEATURES */
+.features {
+  background: rgba(24, 24, 27, 0.5);
+  border-top: 1px solid #18181b;
+}
+
+.featuresGrid {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem;
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .featuresGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ICON COLORS */
+.yellow {
+  color: #eab308;
+}
+.indigo {
+  color: #6366f1;
+}
+.cyan {
+  color: #22d3ee;
+}
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid #18181b;
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #71717a;
+}
+
+.socials {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hideMobile {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+  .hideMobile {
+    display: none;
+  }
+}
+
+/* --- STEPS SECTION (How it works) --- */
+.stepsSection {
+  padding: 4rem 1rem;
+  text-align: center;
+  /* Optional background color to separate it from Hero */
+  /* background-color: #111; */
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  margin-bottom: 3rem;
+  color: #fff; /* Assuming dark mode text color */
+}
+
+.stepsGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.stepCard {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.stepCard > h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.stepCard > p {
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+.stepIcon {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* Icon color */
+}
+
+.stepArrow {
+  color: #444; /* Arrow color between steps */
+}
+
+@media (max-width: 768px) {
+  .stepArrow {
+    display: none;
+    /* Hide arrows on mobile when items stack vertically */
+  }
+}

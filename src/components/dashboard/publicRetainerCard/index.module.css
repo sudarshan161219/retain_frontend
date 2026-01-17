@@ -1,0 +1,275 @@
+:root {
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --green-500: #22c55e;
+  --yellow-500: #eab308;
+}
+
+.card {
+  background-color: var(--background);
+  color: var(--primary);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Header Section */
+.header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--zinc-800);
+  background-color: var(--zinc-900-50);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary);
+}
+
+.statusText {
+  font-size: 0.75rem;
+  color: var(--label);
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+.statusActive {
+  color: var(--green-500);
+}
+.statusPaused {
+  color: var(--yellow-500);
+}
+.statusArchived {
+  color: var(--zinc-500);
+}
+
+.refillBtn {
+  font-size: 0.75rem;
+  background-color: var(--white);
+  color: var(--black);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.refillBtn:hover {
+  background-color: var(--zinc-200);
+}
+
+/* Content Body */
+.body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; /* space-y-8 equivalent */
+}
+
+/* Progress Stats */
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 0.75rem;
+}
+
+.status {
+  color: var(--primary);
+}
+
+.percentage {
+  font-size: 2.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.usedLabel {
+  color: var(--zinc-500);
+  font-size: 0.875rem;
+  margin-left: 0.5rem;
+}
+
+.remainingHours {
+  font-weight: 700;
+  margin: 0;
+}
+
+.remainingLabel {
+  font-size: 0.75rem;
+  color: var(--primary);
+  margin: 0;
+}
+
+.textRed {
+  color: var(--red-500);
+}
+.textZinc {
+  color: var(--primary);
+}
+
+/* Progress Bar */
+.progressBarContainer {
+  height: 1rem;
+  background-color: var(--background);
+  outline: 1px solid var(--border);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.patternOverlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.1;
+  background-image: linear-gradient(
+    45deg,
+    var(--primary) 25%,
+    transparent 25%,
+    transparent 50%,
+    var(--primary) 50%,
+    var(--primary) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.progressBarFill {
+  height: 100%;
+  transition: width 0.5s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.bgRed {
+  background-color: var(--red-600);
+}
+.bgWhite {
+  background-color: var(--primary);
+}
+
+.limitsRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* Logs Section */
+.recentHeader {
+  color: var(--popover-foreground);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scrollContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar Styling */
+.scrollContainer::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollContainer::-webkit-scrollbar-thumb {
+  background: var(--zinc-800);
+  border-radius: 4px;
+}
+.scrollContainer::-webkit-scrollbar-thumb:hover {
+  background: var(--zinc-600);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem 0;
+  border: 1px dashed var(--zinc-800);
+  border-radius: 0.75rem;
+  color: var(--zinc-600);
+  font-size: 0.875rem;
+}
+
+.logItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 0.875rem;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--zinc-800-50);
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.logItem:last-child {
+  border-bottom: none;
+}
+
+.logItem:hover {
+  background-color: var(--zinc-900-50);
+}
+
+.logDescription {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.descText {
+  color: var(--popover-foreground);
+  font-weight: 500;
+  margin: 0;
+  transition: color 0.2s;
+}
+
+.logItem:hover .descText {
+  color: var(--white);
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  color: var(--primary);
+}
+
+.dateText {
+  font-size: 0.75rem;
+  color: var(--zinc-600);
+}
+
+.hoursBadge {
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  color: var(--primary);
+  background-color: var(--primary-foreground);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}

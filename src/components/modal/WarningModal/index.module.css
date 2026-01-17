@@ -1,0 +1,176 @@
+/* --- Variables (Zinc & Red Theme) --- */
+:root {
+  --zinc-900: #18181b;
+  --zinc-800: #27272a;
+  --zinc-700: #3f3f46;
+  --zinc-500: #71717a;
+  --zinc-400: #a1a1aa;
+  --zinc-300: #d4d4d8;
+  --white: #ffffff;
+
+  --red-900-50: rgba(127, 29, 29, 0.5);
+  --red-700: #b91c1c;
+  --red-600: #dc2626;
+  --red-500: #ef4444;
+  --red-500-10: rgba(239, 68, 68, 0.1);
+  --red-500-20: rgba(239, 68, 68, 0.2);
+
+  --overlay-bg: rgba(0, 0, 0, 0.9);
+}
+
+/* --- Layout & Overlay --- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--overlay-bg);
+  backdrop-filter: blur(4px); /* backdrop-blur-sm */
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalContainer {
+  width: 100%;
+  max-width: 24rem; /* max-w-sm */
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+  padding: 1.5rem; /* p-6 */
+  position: relative;
+}
+
+/* --- Close Button --- */
+.closeButton {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--zinc-500);
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  color: var(--white);
+}
+
+.closeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Content Styling --- */
+.contentWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.iconWrapper {
+  width: 4rem; /* w-16 */
+  height: 4rem; /* h-16 */
+  border-radius: 9999px;
+  background-color: var(--red-500-10);
+  color: var(--red-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  /* Ring simulation */
+  box-shadow: 0 0 0 1px var(--red-500-20);
+}
+
+.title {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0;
+}
+
+.description {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--label);
+  line-height: 1.625;
+  padding: 0 0.5rem;
+  margin: 0;
+}
+
+/* --- Action Buttons --- */
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.baseButton {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem; /* rounded-xl */
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.baseButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background-color: var(--zinc-800);
+  color: var(--zinc-300);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: var(--zinc-700);
+}
+
+.confirmButton {
+  background-color: var(--red-600);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background-color: var(--red-700);
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,21 @@
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.feature p {
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+.featureIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

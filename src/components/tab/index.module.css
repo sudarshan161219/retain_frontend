@@ -1,0 +1,98 @@
+/* Container for the whole tab system */
+.tabsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  outline: 1px solid var(--border);
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+/* Base styles for the Tab Button */
+.button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted-foreground, #666); /* Fallback to grey */
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+}
+
+/* Hover effects for all buttons */
+.button:hover {
+  color: var(--foreground, #000);
+  background-color: var(--accent, #f4f4f5);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Variant: Default (Pill/Background style)                                   */
+/* -------------------------------------------------------------------------- */
+.default {
+  background-color: transparent;
+}
+
+/* Active state for Default variant */
+/* Note: You can remove the inline style={{ backgroundColor... }} in the TSX 
+   if you rely purely on this class instead. */
+.default.active {
+  background-color: var(--background, #fff);
+  color: var(--foreground, #000);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Variant: Outline (Border Bottom style)                                     */
+/* -------------------------------------------------------------------------- */
+.outline {
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 0.75rem;
+  margin-bottom: -2px; /* Pulls it down to overlap a bottom border if you have one */
+}
+
+.outline:hover {
+  background-color: transparent;
+  border-bottom-color: var(--border, #e2e8f0);
+}
+
+.outline.active {
+  color: var(--primary, #000);
+  border-bottom-color: var(--primary, #000);
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Inner Content Wrapper (Icon + Text alignment)                              */
+/* -------------------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Content Wrappers (The box holding the tab content)                         */
+/* -------------------------------------------------------------------------- */
+.defaultWrapper {
+  padding: 1rem;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  background-color: var(--card, #fff);
+  color: var(--card-foreground, #000);
+}
+
+.outlineWrapper {
+  padding-top: 1rem;
+  /* Outline usually implies the content just sits below without a box */
+}
