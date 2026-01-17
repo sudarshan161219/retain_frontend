@@ -4,7 +4,7 @@ A modern, real-time client retainer dashboard. Built to replace messy email thre
 
 ![Dashboard Preview](./assets/retain_dashboard.png)
 
-##  Features
+## Features
 
 - **Zero-Login Access:** Clients access their dashboard via a unique, secure slug.
 - **Real-Time Updates:** Socket.io integration pushes changes instantly (no refresh needed).
@@ -14,7 +14,7 @@ A modern, real-time client retainer dashboard. Built to replace messy email thre
 - **Dark/Light Mode:** Fully responsive UI with theme persistence.
 - **"Refill" CTA:** Optional payment link that appears when the budget runs low.
 
-##  Tech Stack
+## Tech Stack
 
 - **Framework:** [React](https://react.dev/) + [Vite](https://vitejs.dev/)
 - **State Management:** [TanStack Query](https://tanstack.com/query/latest) (Server State) + [Zustand](https://github.com/pmndrs/zustand) (Client State)
@@ -22,7 +22,7 @@ A modern, real-time client retainer dashboard. Built to replace messy email thre
 - **Real-Time:** [Socket.io Client](https://socket.io/)
 - **Utilities:** `date-fns` (Formatting), `clsx` (Class merging)
 
-##  Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -33,6 +33,6 @@ A modern, real-time client retainer dashboard. Built to replace messy email thre
 
 1. **Clone the repository**
    ```bash
-   git clone [https://github.com/yourusername/retain-frontend.git](https://github.com/yourusername/retain-frontend.git)
+   git clone [https://github.com/sudarshan161219/retain_frontend](https://github.com/sudarshan161219/retain_frontend)
    cd retain-frontend
    ```
