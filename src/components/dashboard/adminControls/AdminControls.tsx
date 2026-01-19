@@ -195,7 +195,7 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
           {/* Toggle Edit Mode */}
           <button
             onClick={() => setIsEditing(!isEditing)}
-            className="text-gray-400 hover:text-black transition"
+            className={styles.editIconBtn}
             title="Edit Project Details"
           >
             {isEditing ? <X size={16} /> : <Pencil size={14} />}

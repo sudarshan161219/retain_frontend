@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
-export type ModalType = "WARNING" | "CREATE_PROJECT" | null;
+export type ModalType = "WARNING" | "CREATE_PROJECT" | "EXPORT_REPORT" | null;
 
 // The data we need to render the warning
 interface ModalData {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
   confirmText?: string;
-  variant?: "danger" | "neutral"; // Red or Gray styling
+  variant?: "danger" | "neutral" | "success"; // Red or Gray styling
   onConfirm: () => void | Promise<void>; // The magic function
 }
 

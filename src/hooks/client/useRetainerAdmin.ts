@@ -115,6 +115,45 @@ export const useRetainerAdmin = (adminToken: string | undefined) => {
     },
   });
 
+  // 7. ACTION: EXPORT EXCEL REPORT
+  const exportReportMutation = useMutation({
+    mutationFn: async () => {
+      // ✅ No manual header needed; the interceptor handles it.
+      const response = await api.get("/export", {
+        responseType: "blob", // Critical for file downloads
+      });
+      return response;
+    },
+    onSuccess: (response) => {
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+
+      // Extract filename from headers
+      const contentDisposition = response.headers["content-disposition"];
+      let fileName = "Retainer_Report.xlsx";
+
+      if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+        if (fileNameMatch && fileNameMatch.length === 2)
+          fileName = fileNameMatch[1];
+      }
+
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("Report downloaded");
+    },
+    onError: () => {
+      toast.error("Failed to download report");
+    },
+  });
+
   return {
     // Data
     client: query.data,
@@ -137,5 +176,8 @@ export const useRetainerAdmin = (adminToken: string | undefined) => {
 
     deleteProject: deleteProjectMutation.mutate,
     isDeletingProject: deleteProjectMutation.isPending,
+
+    exportReport: exportReportMutation.mutate,
+    isExporting: exportReportMutation.isPending,
   };
 };

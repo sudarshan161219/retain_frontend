@@ -33,7 +33,7 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
 
     // 1. Connection Logic
     const handleJoin = () => {
-      console.log(`🔌 Client Connected! Joining room: ${slug}`);
+      // console.log(`🔌 Client Connected! Joining room: ${slug}`);
       socket.emit("join-room", slug);
     };
 
@@ -45,7 +45,7 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
 
     // 2. Unified Event Handler
     const handleUpdate = (payload: RetainerUpdatePayload) => {
-      console.log("⚡ Retainer Update:", payload);
+      // console.log("⚡ Retainer Update:", payload);
 
       if (payload.type === "PROJECT_DELETED") {
         queryClient.setQueryData(queryKey, null);
@@ -70,7 +70,7 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
               ...oldClient,
               // Filter out the deleted log
               logs: oldClient.logs.filter(
-                (log: any) => log.id !== payload.logId
+                (log: any) => log.id !== payload.logId,
               ),
             };
 
@@ -97,7 +97,7 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
     socket.on("retainer-update", handleUpdate);
     // 4. Cleanup
     return () => {
-      console.log(`🔌 Leaving room: ${slug}`);
+      // console.log(`🔌 Leaving room: ${slug}`);
       socket.emit("leave-room", slug);
       socket.off("connect", handleJoin);
       socket.off("retainer-update", handleUpdate);

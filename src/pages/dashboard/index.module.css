@@ -3,6 +3,7 @@
   background-color: var(--background);
   padding-top: 3rem;
   padding-bottom: 5rem;
+  width: 100%;
 }
 
 .centerContainer {
@@ -76,16 +77,14 @@
 
 /* Main Grid Layout */
 .mainGrid {
-  max-width: 72rem; /* 6xl */
   margin: 0 auto;
   padding: 0 1.5rem;
-  display: grid;
-  grid-template-columns: 1fr;
   gap: 3rem;
 }
 
 @media (min-width: 1024px) {
   .mainGrid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 }

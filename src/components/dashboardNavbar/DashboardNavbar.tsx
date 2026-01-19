@@ -9,6 +9,7 @@ import {
   Sun,
   Moon,
   Trash2,
+  Download,
 } from "lucide-react";
 import { useModalStore } from "@/store/modalStore/useModalStore";
 import { useRetainerAdmin } from "@/hooks/client/useRetainerAdmin";
@@ -165,6 +166,14 @@ export const DashboardNavbar = () => {
               <span className={styles.brandText}>Client View</span>
             </a>
           )}
+
+          <button
+            onClick={() => openModal("EXPORT_REPORT")}
+            className={styles.iconBtn}
+            title="Download Report"
+          >
+            <Download size={16} />
+          </button>
 
           {/* LOGOUT / EXIT */}
           <button
