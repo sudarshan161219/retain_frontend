@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { DashboardNavbar } from "@/components/dashboardNavbar/DashboardNavbar";
-import { WarningModal } from "@/components/modal/WarningModal/WarningModal";
+import { ModalManager } from "@/components/modal/modalManager/ModalManager";
 
 export const DashboardLayout = () => {
   return (
@@ -11,7 +11,7 @@ export const DashboardLayout = () => {
       {/* Page Content */}
       <main className="animate-in fade-in duration-500">
         <Outlet />
-        <WarningModal />
+        <ModalManager />
       </main>
     </div>
   );

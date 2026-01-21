@@ -4,13 +4,11 @@ import { useRetainerAdmin } from "@/hooks/client/useRetainerAdmin";
 import { RetainerSocketManager } from "@/components/socketManager/RetainerSocketManager";
 import { AdminControls } from "@/components/dashboard/adminControls/AdminControls";
 import { PublicRetainerCard } from "@/components/dashboard/publicRetainerCard/PublicRetainerCard";
-import { useModalStore } from "@/store/modalStore/useModalStore";
-import { ExportModal } from "@/components/modal/exportModal/ExportModal";
 import styles from "./index.module.css";
 
 export const Dashboard = () => {
   const { adminToken } = useParams();
-  const { isOpen } = useModalStore();
+
   // 1. Fetch Admin Data
   const { client, isLoading, isError } = useRetainerAdmin(adminToken);
 
@@ -74,8 +72,6 @@ export const Dashboard = () => {
           </p>
         </div>
       </main>
-
-      {isOpen && <ExportModal />}
     </div>
   );
 };

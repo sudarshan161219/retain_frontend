@@ -27,10 +27,12 @@ export const PublicRetainerCard = ({ client }: PublicRetainerCardProps) => {
   const { openModal } = useModalStore();
   // Calculations
   const total = Number(client.totalHours);
-  const used = client.logs.reduce((acc, log) => acc + Number(log.hours), 0);
-  const remaining = total - used;
+  const used = client.logs
+    .filter((log: any) => log.type !== "REFILL")
+    .reduce((acc: number, log: any) => acc + Number(log.hours), 0);
   const percentage = Math.min((used / total) * 100, 100);
   const isOverBudget = used > total;
+  const remaining = total - used;
 
   // Helper to determine status color class
   const getStatusClass = (status: string) => {

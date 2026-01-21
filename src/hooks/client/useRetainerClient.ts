@@ -15,7 +15,7 @@ export const useRetainerClient = (slug: string | undefined) => {
     queryKey,
     queryFn: () => fetchClient(slug!),
     enabled: !!slug,
-    staleTime: Infinity,
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 

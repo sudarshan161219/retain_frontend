@@ -1,0 +1,211 @@
+/* --- CONTAINER & OVERLAY --- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modalCard {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- HEADER ELEMENTS --- */
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--primary); /* Zinc 600 */
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn:hover {
+  opacity: 0.8;
+}
+
+.modalIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  /* Background/Color is handled inline in JSX for theme flexibility */
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--popover-foreground);
+  margin-bottom: 0.5rem;
+}
+
+.modalText {
+  color: var(--accent-foreground); /* Zinc 400 */
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* --- FORM ELEMENTS --- */
+
+.label {
+  color: var(--label);
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+  font-size: 0.7rem;
+}
+
+.toggleLog {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem; /* gap-3 */
+  padding: 0.75rem; /* p-3 */
+
+  border: 1px solid rgb(39 39 42); /* zinc-800 */
+  border-radius: 0.5rem; /* rounded-lg */
+
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggleLog:hover {
+  opacity: 0.8;
+}
+
+.toggleLogH {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.toggleLogP {
+  font-size: 0.75rem;
+  color: var(--accent-foreground);
+  line-height: 1.625;
+}
+
+.input {
+  width: 100%;
+  background: transparent; /* Zinc 950 (Darker than card) */
+  border: 1px solid var(--border);
+  color: var(--accent-foreground);
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: all 0.2s ease;
+  outline: none;
+  font-family: inherit;
+}
+
+.input:focus {
+  border-color: #eab308; /* Yellow-500 focus ring */
+  box-shadow: 0 0 0 1px #eab308;
+}
+
+.toggle {
+  margin-top: 0.25rem; /* mt-1 */
+  width: 1rem; /* w-4 */
+  height: 1rem; /* h-4 */
+  accent-color: rgb(234 179 8); /* yellow-500 */
+  background-color: rgb(39 39 42); /* zinc-800 */
+  border: 1px solid rgb(63 63 70); /* zinc-700 */
+  border-radius: 0.25rem;
+}
+
+.toggle:hover {
+  opacity: 0.8;
+}
+
+/* Remvoe spin buttons from number input */
+.input::-webkit-outer-spin-button,
+.input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- ACTIONS FOOTER --- */
+.modalActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancelBtn {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancelBtn:hover {
+  background: var(--primary);
+  color: var(--background);
+}
+
+.confirmBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.confirmBtn:hover {
+  opacity: 0.9;
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

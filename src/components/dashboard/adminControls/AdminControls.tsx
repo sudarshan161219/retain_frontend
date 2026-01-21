@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useRetainerAdmin } from "@/hooks/client/useRetainerAdmin";
+import { useModalStore } from "@/store/modalStore/useModalStore";
 import { Button } from "@/components/ui/button";
+import type { RetainerLog } from "@/types/retainer/retainer";
 import {
   Copy,
   Check,
@@ -10,9 +12,9 @@ import {
   AlertTriangle,
   Plus,
   Loader2,
-  Pencil, // New Icon
-  X, // New Icon
-  Save, // New Icon
+  Pencil,
+  Zap,
+  Link as LinkIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import styles from "./index.module.css";
@@ -23,31 +25,31 @@ interface AdminControlsProps {
 }
 
 export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
+  const { openModal } = useModalStore(); // To trigger Refill
   const {
     addLog,
     updateStatus,
-    updateDetails, // New Mutation
+    updateDetails,
     isAddingLog,
     isUpdatingStatus,
-    isUpdatingDetails, // New Loading State
+    isUpdatingDetails,
   } = useRetainerAdmin(adminToken);
 
-  // --- LOG FORM STATE ---
+  // --- LOG FORM ---
   const [formData, setFormData] = useState({
     description: "",
     hours: "",
     date: format(new Date(), "yyyy-MM-dd"),
   });
 
-  // --- SETTINGS EDIT STATE ---
+  // --- SETTINGS FORM (Decoupled from Hours) ---
   const [isEditing, setIsEditing] = useState(false);
   const [settingsForm, setSettingsForm] = useState({
     name: client.name || "",
     refillLink: client.refillLink || "",
-    totalHours: client.totalHours || "",
   });
 
-  // --- COPY LINK STATE ---
+  // --- COPY LINK ---
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     const url = `${window.location.origin}/${client.slug}`;
@@ -56,7 +58,6 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // --- HANDLERS ---
   const handleLogSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.description || !formData.hours) return;
@@ -67,26 +68,34 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
         date: new Date(formData.date).toISOString(),
       },
       {
-        onSuccess: () => {
-          setFormData((prev) => ({ ...prev, description: "", hours: "" }));
-        },
-      }
+        onSuccess: () =>
+          setFormData((prev) => ({ ...prev, description: "", hours: "" })),
+      },
     );
   };
 
+  // ✅ FIX: This now ONLY updates Name/Link. It ignores hours completely.
   const handleSettingsSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateDetails(
       {
         name: settingsForm.name,
-        refillLink: settingsForm.refillLink || null, // Send null if empty
-        totalHours: Number(settingsForm.totalHours),
+        refillLink: settingsForm.refillLink || null,
+        // Notice: No totalHours here!
       },
       {
         onSuccess: () => setIsEditing(false),
-      }
+      },
     );
   };
+
+  const hoursSpent = client.logs
+    .filter((log: RetainerLog) => log.type !== "REFILL")
+    .reduce((acc: number, log: RetainerLog) => acc + Number(log.hours), 0);
+
+  // 2. Calculate Remaining
+  const totalBudget = Number(client.totalHours);
+  const remaining = totalBudget - hoursSpent;
 
   return (
     <div className={styles.stack}>
@@ -96,26 +105,198 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
         <div>
           <h3 className={styles.warningTitle}>Save your Admin Link</h3>
           <p className={styles.warningText}>
-            We don't have accounts. If you lose the URL of this page, you lose
-            access to this dashboard forever. Bookmark it now.
+            Bookmark this page. If you lose this URL, you lose access to the
+            dashboard.
           </p>
         </div>
       </div>
 
-      {/* 2. ADD LOG FORM */}
+      {/* 2. BUDGET & STATUS (The "Money" Card) */}
+      <div className={styles.card}>
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <h2
+              className={styles.cardHeader}
+              style={{ marginBottom: "0.25rem" }}
+            >
+              Project Status
+            </h2>
+            <p className="text-xs text-zinc-500">
+              Manage budget and visibility
+            </p>
+          </div>
+
+          {/* Top Up Button */}
+          <Button
+            onClick={() => openModal("REFILL_BALANCE")} // Trigger Modal
+            variant="outline"
+            className={styles.topUpBtn}
+          >
+            <Zap size={14} fill="currentColor" />
+            Top Up Balance
+          </Button>
+        </div>
+
+        <div className={styles.budgetcard}>
+          <div className={styles.budgetsection}>
+            <p className={styles.budgetlabel}>Total Budget</p>
+            <p className={styles.budgetvalue}>
+              {totalBudget.toFixed(2)}
+              <span className={styles.budgetunit}>hrs</span>
+            </p>
+          </div>
+
+          <div className={styles.budgetdivider}></div>
+
+          <div className={styles.budgetsection}>
+            <p className={styles.budgetlabel}>Remaining</p>
+            <p className={styles.budgetvalue}>
+              {remaining.toFixed(2)}
+              <span className={styles.budgetunit}>hrs</span>
+            </p>
+          </div>
+        </div>
+
+        {/* Status Toggles */}
+        <div className={styles.statusGrid}>
+          <StatusButton
+            active={client.status === "ACTIVE"}
+            onClick={() => updateStatus("ACTIVE")}
+            label="Active"
+            icon={<PlayCircle size={16} />}
+            activeClass={styles.statusActive}
+            isLoading={isUpdatingStatus && client.status !== "ACTIVE"}
+          />
+          <StatusButton
+            active={client.status === "PAUSED"}
+            onClick={() => updateStatus("PAUSED")}
+            label="Paused"
+            icon={<PauseCircle size={16} />}
+            activeClass={styles.statusPaused}
+            isLoading={isUpdatingStatus && client.status !== "PAUSED"}
+          />
+          <StatusButton
+            active={client.status === "ARCHIVED"}
+            onClick={() => updateStatus("ARCHIVED")}
+            label="Done"
+            icon={<Archive size={16} />}
+            activeClass={styles.statusArchived}
+            isLoading={isUpdatingStatus && client.status !== "ARCHIVED"}
+          />
+        </div>
+      </div>
+
+      {/* 3. SETTINGS (The "Identity" Card) */}
+      <div className={styles.card}>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
+            Project Settings
+          </h2>
+          {!isEditing && (
+            <button
+              onClick={() => setIsEditing(true)}
+              className={styles.editIconBtn}
+            >
+              <Pencil size={14} />
+            </button>
+          )}
+        </div>
+
+        {isEditing ? (
+          <form onSubmit={handleSettingsSubmit} className={styles.formStack}>
+            <div className={styles.inputGroup}>
+              <label htmlFor="Name" className={styles.label}>
+                Project Name
+              </label>
+              <input
+                id="Name"
+                className={styles.input}
+                value={settingsForm.name}
+                onChange={(e) =>
+                  setSettingsForm({ ...settingsForm, name: e.target.value })
+                }
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="Refill" className={styles.label}>
+                Refill / Payment Link
+              </label>
+              <div className="relative">
+                <LinkIcon
+                  size={14}
+                  className="absolute left-3 top-3 text-zinc-500"
+                />
+                <input
+                  id="Refill"
+                  className={`${styles.RefillInput} pl-9`}
+                  value={settingsForm.refillLink}
+                  onChange={(e) =>
+                    setSettingsForm({
+                      ...settingsForm,
+                      refillLink: e.target.value,
+                    })
+                  }
+                  placeholder="https://stripe.com/..."
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2 justify-end mt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setIsEditing(false)}
+                className="text-zinc-400"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isUpdatingDetails}
+                className="bg-zinc-100 text-zinc-900 hover:bg-white"
+              >
+                {isUpdatingDetails ? (
+                  <Loader2 className="animate-spin" size={14} />
+                ) : (
+                  "Save Changes"
+                )}
+              </Button>
+            </div>
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <label className={styles.label}>Public Client Link</label>
+              <div className={styles.copyContainer}>
+                <code className={styles.codeBlock}>
+                  {window.location.origin}/{client.slug}
+                </code>
+                <button onClick={handleCopy} className={styles.copyButton}>
+                  {copied ? (
+                    <Check size={16} color="#16a34a" />
+                  ) : (
+                    <Copy size={16} />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* 4. ADD LOG FORM (Unchanged) */}
       <div className={styles.card}>
         <h2 className={styles.cardHeader}>
-          <Plus className={styles.plusIcon} />
-          Log Hours
+          <Plus className={styles.plusIcon} /> Log Hours
         </h2>
-
         <form onSubmit={handleLogSubmit} className={styles.formStack}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>Description</label>
             <input
               type="text"
-              placeholder="e.g. Fixed navigation bug on mobile"
               className={styles.input}
+              placeholder="e.g. Fixed navigation bug on mobile"
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
@@ -123,7 +304,6 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
               disabled={client.status !== "ACTIVE"}
             />
           </div>
-
           <div className={styles.gridCols2}>
             <div className={styles.inputGroup}>
               <label className={styles.label}>Hours</label>
@@ -177,193 +357,11 @@ export const AdminControls = ({ adminToken, client }: AdminControlsProps) => {
           )}
         </form>
       </div>
-
-      {/* 3. SETTINGS & EDIT DETAILS */}
-      <div className={styles.card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1rem",
-          }}
-        >
-          <h2 className={styles.sectionTitle} style={{ marginBottom: 0 }}>
-            Settings
-          </h2>
-
-          {/* Toggle Edit Mode */}
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className={styles.editIconBtn}
-            title="Edit Project Details"
-          >
-            {isEditing ? <X size={16} /> : <Pencil size={14} />}
-          </button>
-        </div>
-
-        {/* EDIT MODE FORM */}
-        {isEditing ? (
-          <form onSubmit={handleSettingsSubmit} className={styles.formStack}>
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>Project Name</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={settingsForm.name}
-                onChange={(e) =>
-                  setSettingsForm({ ...settingsForm, name: e.target.value })
-                }
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>Refill / Payment Link</label>
-              <input
-                type="url"
-                placeholder="https://buy.stripe.com/..."
-                className={styles.input}
-                value={settingsForm.refillLink}
-                onChange={(e) =>
-                  setSettingsForm({
-                    ...settingsForm,
-                    refillLink: e.target.value,
-                  })
-                }
-              />
-              <p className="text-[10px] text-gray-400 mt-1">
-                Optional. Paste a payment link here to show a "Refill" button on
-                the client dashboard.
-              </p>
-            </div>
-
-            <Button
-              type="submit"
-              disabled={isUpdatingDetails}
-              variant="default"
-              className={styles.submitButton}
-            >
-              {isUpdatingDetails ? (
-                <Loader2 className="animate-spin" size={16} />
-              ) : (
-                <>
-                  <Save size={14} /> Save Changes
-                </>
-              )}
-            </Button>
-          </form>
-        ) : (
-          /* READ ONLY VIEW */
-          <div className="space-y-6">
-            {/* Share Link */}
-            <div>
-              <label
-                className={styles.label}
-                style={{ marginBottom: "0.5rem" }}
-              >
-                Public Client Link
-              </label>
-              <div className={styles.copyContainer}>
-                <code className={styles.codeBlock}>
-                  {window.location.origin}/{client.slug}
-                </code>
-                <button onClick={handleCopy} className={styles.copyButton}>
-                  {copied ? (
-                    <Check size={16} color="#16a34a" />
-                  ) : (
-                    <Copy size={16} />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Total Budget Input with Save Button */}
-            <div className={styles.inputGroup}>
-              <label className={styles.label}>Total Budget (Hours)</label>
-              <div className="flex gap-2">
-                <input
-                  type="number"
-                  className={styles.input}
-                  value={settingsForm.totalHours}
-                  onChange={(e) =>
-                    setSettingsForm({
-                      ...settingsForm,
-                      totalHours: e.target.value,
-                    })
-                  }
-                  placeholder="e.g. 20"
-                />
-                <button
-                  onClick={() =>
-                    updateDetails({
-                      totalHours: Number(settingsForm.totalHours),
-                    })
-                  }
-                  disabled={
-                    isUpdatingDetails ||
-                    Number(settingsForm.totalHours) === client.totalHours
-                  }
-                  className="bg-black text-white px-4 rounded-lg text-xs font-bold hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center gap-2"
-                  title="Save new budget"
-                >
-                  {isUpdatingDetails ? (
-                    <Loader2 className="animate-spin" size={14} />
-                  ) : (
-                    "Update"
-                  )}
-                </button>
-              </div>
-              <p className="text-[10px] text-gray-400 mt-1">
-                Enter the new total (e.g. change 20 to 40) after receiving
-                payment.
-              </p>
-            </div>
-
-            {/* Status Toggles */}
-            <div>
-              <label
-                className={styles.label}
-                style={{ marginBottom: "0.5rem" }}
-              >
-                Project Status
-              </label>
-              <div className={styles.statusGrid}>
-                <StatusButton
-                  active={client.status === "ACTIVE"}
-                  onClick={() => updateStatus("ACTIVE")}
-                  label="Active"
-                  icon={<PlayCircle size={16} />}
-                  activeClass={styles.statusActive}
-                  isLoading={isUpdatingStatus && client.status !== "ACTIVE"}
-                />
-                <StatusButton
-                  active={client.status === "PAUSED"}
-                  onClick={() => updateStatus("PAUSED")}
-                  label="Paused"
-                  icon={<PauseCircle size={16} />}
-                  activeClass={styles.statusPaused}
-                  isLoading={isUpdatingStatus && client.status !== "PAUSED"}
-                />
-                <StatusButton
-                  active={client.status === "ARCHIVED"}
-                  onClick={() => updateStatus("ARCHIVED")}
-                  label="Done"
-                  icon={<Archive size={16} />}
-                  activeClass={styles.statusArchived}
-                  isLoading={isUpdatingStatus && client.status !== "ARCHIVED"}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
 
-// ... StatusButton Helper Component (Same as before) ...
-
-// Helper Component
+// Helper
 const StatusButton = ({
   active,
   onClick,
@@ -372,9 +370,7 @@ const StatusButton = ({
   activeClass,
   isLoading,
 }: any) => {
-  // Combine base class + conditional active class
   const btnClass = `${styles.statusButton} ${active ? activeClass : ""}`;
-
   return (
     <button
       onClick={onClick}

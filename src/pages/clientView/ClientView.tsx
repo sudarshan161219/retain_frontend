@@ -6,12 +6,13 @@ import { formatDuration } from "@/lib/formatters";
 import { RetainerSocketManager } from "@/components/socketManager/RetainerSocketManager";
 import styles from "./index.module.css";
 import { useThemeStore } from "@/store/theme/useThemeStore";
+import type { RetainerLog, RetainerStatus } from "@/types/retainer/retainer";
 
 export const ClientView = () => {
-  const { slug } = useParams();
-
+  const { slug } = useParams<{ slug: string }>();
   const { data: client, isLoading, isError } = useRetainerClient(slug);
   const { theme, toggleLight, toggleDark } = useThemeStore();
+
   if (isLoading)
     return (
       <div className={styles.loaderContainer}>
@@ -36,17 +37,20 @@ export const ClientView = () => {
   }
 
   // CALCULATIONS
-  const totalHours = Number(client.totalHours);
-  const hoursUsed = client.logs.reduce(
-    (acc: number, log: any) => acc + Number(log.hours),
-    0
-  );
-  const percentage = Math.min((hoursUsed / totalHours) * 100, 100);
+  const totalHours = Number(client.totalHours || 0);
+
+  const hoursUsed = client.logs
+    .filter((log: RetainerLog) => log.type !== "REFILL")
+    .reduce((acc: number, log: RetainerLog) => acc + Number(log.hours || 0), 0);
+
+  const percentage =
+    totalHours > 0 ? Math.min((hoursUsed / totalHours) * 100, 100) : 0;
+
   const isOverBudget = hoursUsed > totalHours;
   const remaining = totalHours - hoursUsed;
 
   // Determine Badge Style
-  const getBadgeStyle = (status: string) => {
+  const getBadgeStyle = (status: RetainerStatus) => {
     switch (status) {
       case "ACTIVE":
         return styles.statusActive;
@@ -98,7 +102,7 @@ export const ClientView = () => {
             <div className={styles.verticalLine}></div>
             <div
               className={`${styles.statusBadge} ${getBadgeStyle(
-                client.status
+                client.status,
               )}`}
             >
               {client.status.toLowerCase()}
@@ -172,7 +176,7 @@ export const ClientView = () => {
                 <p>No work logged yet.</p>
               </div>
             ) : (
-              client.logs.map((log: any) => (
+              client.logs.map((log: RetainerLog) => (
                 <div key={log.id} className={styles.logItem}>
                   <div>
                     <p className={styles.logDescription}>{log.description}</p>

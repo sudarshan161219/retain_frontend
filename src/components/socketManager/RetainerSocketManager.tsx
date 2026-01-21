@@ -2,21 +2,19 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getSocket } from "@/lib/socket/socket";
 import { toast } from "sonner";
+import type {
+  RetainerLog,
+  Retainer,
+  RetainerStatus,
+} from "@/types/retainer/retainer";
 
-// Types matching your backend emit payload
 type RetainerUpdatePayload =
-  | { type: "ADD_LOG"; log: any }
-  | { type: "DELETE_LOG"; logId: string }
-  | { type: "STATUS_UPDATE"; status: "ACTIVE" | "PAUSED" | "ARCHIVED" }
-  | {
-      type: "DETAILS_UPDATE";
-      client: {
-        name?: string;
-        totalHours?: number;
-        refillLink?: string | null;
-      };
-    }
-  | { type: "PROJECT_DELETED"; client: { id?: number } };
+  | { type: "ADD_LOG"; data: RetainerLog }
+  | { type: "REFILL"; data: { totalHours: number; log: RetainerLog } }
+  | { type: "DELETE_LOG"; data: string }
+  | { type: "STATUS_UPDATE"; data: { status: RetainerStatus } }
+  | { type: "DETAILS_UPDATE"; data: Partial<Retainer> }
+  | { type: "PROJECT_DELETED"; data: any };
 
 interface RetainerSocketManagerProps {
   slug: string;
@@ -29,11 +27,10 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
     if (!slug) return;
 
     const socket = getSocket();
-    const queryKey = ["client", slug]; // Matches your React Query Key
+    const queryKey = ["client", slug];
 
     // 1. Connection Logic
     const handleJoin = () => {
-      // console.log(`🔌 Client Connected! Joining room: ${slug}`);
       socket.emit("join-room", slug);
     };
 
@@ -45,8 +42,6 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
 
     // 2. Unified Event Handler
     const handleUpdate = (payload: RetainerUpdatePayload) => {
-      // console.log("⚡ Retainer Update:", payload);
-
       if (payload.type === "PROJECT_DELETED") {
         queryClient.setQueryData(queryKey, null);
         queryClient.removeQueries({ queryKey });
@@ -54,36 +49,49 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
         return;
       }
 
-      queryClient.setQueryData(queryKey, (oldClient: any) => {
+      queryClient.setQueryData(queryKey, (oldClient: Retainer | undefined) => {
         if (!oldClient) return undefined;
 
+        // ✅ Extract 'data' once to keep switch cases clean
+        // const { data } = payload;
+
+        // if (!data) return undefined;
         switch (payload.type) {
           case "ADD_LOG":
+            // data IS the new log object
             return {
               ...oldClient,
-              // Add new log to the TOP of the array
-              logs: [payload.log, ...oldClient.logs],
+              logs: [payload.data, ...oldClient.logs],
+            };
+
+          case "REFILL":
+            return {
+              ...oldClient,
+              totalHours: payload.data.totalHours,
+              logs: payload.data.log
+                ? [payload.data.log, ...oldClient.logs]
+                : oldClient.logs,
             };
 
           case "DELETE_LOG":
+            // data IS the log ID string
             return {
               ...oldClient,
-              // Filter out the deleted log
-              logs: oldClient.logs.filter(
-                (log: any) => log.id !== payload.logId,
-              ),
+              logs: oldClient.logs.filter((log) => log.id !== payload.data),
             };
 
           case "STATUS_UPDATE":
+            // data IS { status: "..." }
             return {
               ...oldClient,
-              status: payload.status,
+              status: payload.data.status,
             };
 
           case "DETAILS_UPDATE":
+            // data IS the updated client fields
             return {
               ...oldClient,
-              ...payload.client,
+              ...payload.data,
             };
 
           default:
@@ -95,9 +103,9 @@ export const RetainerSocketManager = ({ slug }: RetainerSocketManagerProps) => {
     // 3. Attach Listeners
     socket.on("connect", handleJoin);
     socket.on("retainer-update", handleUpdate);
+
     // 4. Cleanup
     return () => {
-      // console.log(`🔌 Leaving room: ${slug}`);
       socket.emit("leave-room", slug);
       socket.off("connect", handleJoin);
       socket.off("retainer-update", handleUpdate);

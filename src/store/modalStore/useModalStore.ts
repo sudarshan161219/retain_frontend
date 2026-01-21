@@ -1,22 +1,26 @@
 import { create } from "zustand";
 
-export type ModalType = "WARNING" | "CREATE_PROJECT" | "EXPORT_REPORT" | null;
+// 1. Add "REFILL_BALANCE" to the available types
+export type ModalType =
+  | "WARNING"
+  | "CREATE_PROJECT"
+  | "EXPORT_REPORT"
+  | "REFILL_BALANCE"
+  | null;
 
-// The data we need to render the warning
 interface ModalData {
-  title: string;
-  description: string | React.ReactNode;
+  title?: string; // Made optional since some modals (like Refill) have hardcoded titles
+  description?: string | React.ReactNode;
   confirmText?: string;
-  variant?: "danger" | "neutral" | "success"; // Red or Gray styling
-  onConfirm: () => void | Promise<void>; // The magic function
+  variant?: "danger" | "neutral" | "success";
+  onConfirm?: () => void | Promise<void>;
 }
 
 interface ModalState {
   isOpen: boolean;
   type: ModalType;
-  data: ModalData | null; // <--- Stores the text & callback
+  data: ModalData | null;
 
-  // Actions
   openModal: (type: ModalType, data?: ModalData) => void;
   closeModal: () => void;
 }

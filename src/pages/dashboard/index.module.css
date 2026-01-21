@@ -87,6 +87,11 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .pageContainer {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
 
 /* Headings & Text */

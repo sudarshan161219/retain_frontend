@@ -50,24 +50,6 @@
   color: var(--zinc-500);
 }
 
-.refillBtn {
-  font-size: 0.75rem;
-  background-color: var(--white);
-  color: var(--black);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
-  font-weight: 700;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: background-color 0.2s;
-}
-
-.refillBtn:hover {
-  background-color: var(--zinc-200);
-}
-
 /* Content Body */
 .body {
   padding: 1.5rem;
@@ -286,6 +268,24 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.refillBtn {
+  font-size: 0.75rem;
+  background: var(--accent-foreground);
+  color: var(--muted);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.refillBtn:hover {
+  opacity: 0.8;
 }
 
 /* --- NEW BUTTON STYLES --- */

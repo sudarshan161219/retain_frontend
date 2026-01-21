@@ -17,7 +17,7 @@ export const useRetainerAdmin = (adminToken: string | undefined) => {
       return data.data;
     },
     enabled: !!adminToken,
-    staleTime: 1000 * 60 * 5, // 5 mins (Socket handles updates)
+    staleTime: 1000 * 60 * 5, 
   });
 
   // 2. MUTATION: ADD LOG
@@ -92,7 +92,6 @@ export const useRetainerAdmin = (adminToken: string | undefined) => {
       toast.success("Project updated successfully");
       queryClient.setQueryData(queryKey, (old: any) => {
         if (!old) return updatedClient;
-        // Merge new details (name, totalHours, link) into existing cache
         return { ...old, ...updatedClient };
       });
     },

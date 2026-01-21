@@ -78,6 +78,9 @@
   --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
   --sidebar-border: oklch(0.923 0.003 48.717);
   --sidebar-ring: oklch(0.709 0.01 56.259);
+
+  --topupbtn-accent-text: oklch(0.79 0.16 85);
+  --topupbtn-accent-bg: oklch(0.35 0.06 85 / 0.1);
 }
 
 .dark {
@@ -113,6 +116,9 @@
   --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.553 0.013 58.071);
+
+  --topupbtn-accent-text: oklch(0.84 0.15 85);
+  --topupbtn-accent-bg: oklch(0.35 0.06 85 / 0.25);
 }
 
 @layer base {
@@ -122,4 +128,44 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* --- GLOBAL SCROLLBAR STYLING --- */
+
+/* 1. Firefox Support */
+* {
+  scrollbar-width: thin; /* Options: auto, thin, none */
+  scrollbar-color: #3f3f46 transparent; /* Thumb Color | Track Color */
+}
+
+/* 2. Webkit Support (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 6px; /* Width for vertical scrollbars */
+  height: 6px; /* Height for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* blend with background */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #27272a; /* Zinc-800 (Subtle) */
+  border-radius: 9999px; /* Fully rounded */
+  border: 2px solid transparent; /* Creates padding effect if you want it thicker but look thin */
+  background-clip: content-box;
+}
+
+/* 3. Hover State (Make it slightly more visible) */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #52525b; /* Zinc-600 */
+}
+
+/* 4. Active/Click State */
+::-webkit-scrollbar-thumb:active {
+  background-color: #71717a; /* Zinc-500 */
+}
+
+/* Optional: Corner square where horizontal meets vertical */
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
