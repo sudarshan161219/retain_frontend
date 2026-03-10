@@ -1,5 +1,6 @@
 /* PAGE */
 .page {
+  position: relative;
   min-height: 100vh;
   background: #000;
   color: #fff;
@@ -314,12 +315,17 @@
 }
 
 .stepArrow {
-  color: #444; /* Arrow color between steps */
+  color: #444;
 }
 
 @media (max-width: 768px) {
   .stepArrow {
     display: none;
-    /* Hide arrows on mobile when items stack vertically */
   }
+}
+
+.floatingBadge {
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
 }

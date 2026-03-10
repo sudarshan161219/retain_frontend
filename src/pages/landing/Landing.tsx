@@ -112,7 +112,6 @@ export const Landing = () => {
           work, they see the burn rate. Zero friction. No sign-ups.
         </p>
 
-        {/* UPDATED FORM: Two Inputs now */}
         <form onSubmit={handleStart} className={styles.form}>
           <div className={styles.formGlow} />
           <div
@@ -143,7 +142,7 @@ export const Landing = () => {
                   disabled={loading}
                 />
 
-                {/* 3. ADD THIS: Floating helper text */}
+                {/* 3. Floating helper text */}
                 {totalHours && (
                   <span
                     style={{
@@ -272,6 +271,20 @@ export const Landing = () => {
           </div>
         </div>
       </footer>
+
+      <a
+        href="https://www.buildinprocess.com/product/retain"
+        target="_blank"
+        rel="noopener"
+        className={styles.floatingBadge}
+      >
+        <img
+          src="https://www.buildinprocess.com/badges/badge-1-dark.svg"
+          alt="Featured on BuildInProcess"
+          width="170"
+          height="48"
+        />
+      </a>
     </div>
   );
 };
