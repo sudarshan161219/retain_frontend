@@ -273,15 +273,14 @@ export const Landing = () => {
       </footer>
 
       <a
-        href="https://www.buildinprocess.com/product/retain"
+        href="https://forg.to/products/retain"
+        className={styles.floatingBadge}
         target="_blank"
         rel="noopener"
-        className={styles.floatingBadge}
       >
         <img
-          src="https://www.buildinprocess.com/badges/badge-1-dark.svg"
-          alt="Featured on BuildInProcess"
-          width="170"
+          src="https://forg.to/api/badges/featured/retain?theme=dark&shape=square"
+          alt="Retain - Featured on Forg on forg."
           height="48"
         />
       </a>
